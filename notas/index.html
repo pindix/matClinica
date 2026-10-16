@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    <style>
+        /* Tema inline para evitar flash branco */
+        :root {
+            --bg-inline: #f0f2f0;
+            --text-inline: #1a2a21;
+        }
+        [data-theme="dark"] {
+            --bg-inline: black;
+            --text-inline: #f0f2f0;
+        }
+        html { background-color: var(--bg-inline); }
+        body { background-color: var(--bg-inline); color: var(--text-inline); }
+        body::before { display: none; }
+    </style>
+    <script>
+        (function() {
+            const tema = localStorage.getItem('tema');
+            if (tema === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloco de Notas | MatClínica</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    
+    <!-- ==========================================
+   FAVICON (Usando o logo da MatClínica)
+=========================================== -->
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/imagens/logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/imagens/logo.png">
+<link rel="apple-touch-icon" href="../assets/imagens/logo.png">
+    
+    
+</head>
+<body>
+
+
+
+
+    <!-- ============================================================ -->
+    <!-- BARRA SUPERIOR - WEB STYLE                                 -->
+    <!-- ============================================================ -->
+    <header class="web-header">
+        <!-- Card com os controles -->
+        <div class="header-controls">
+            <a href="../index.html" class="btn-icon" title="Início">
+                <i class="ri-arrow-left-line"></i>
+                <span>Início</span>
+            </a>
+            <span class="divider-header">|</span>
+            <button class="btn-icon theme-toggle" id="themeBtn" title="Mudar Tema">
+                <i class="ri-moon-line" id="themeIcon"></i>
+                <span>Tema</span>
+            </button>
+        </div>
+
+        <!-- Título da ferramenta -->
+        <div class="header-title">
+            <span class="tool-badge">Bloco de Notas</span>
+        </div>
+    </header>
+
+
+
+    <!-- ================================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ================================================================== -->
+    <section class="main-tool">
+
+        <!-- ÁREA DE EDIÇÃO -->
+        <div id="area-edicao" class="area-edicao">
+            <div class="editor-wrapper">
+                <div class="editor-header">
+                    <div class="editor-header-left">
+                        <span id="editor-status" class="editor-status">📝 Nova nota</span>
+                        <span class="editor-shortcut"></span>
+                    </div>
+                    <span id="editor-data" class="editor-data"></span>
+                </div>
+
+                <div class="editor-titulo-wrapper">
+                    <input type="text" id="editor-titulo" placeholder="Título da nota..." maxlength="60">
+                    <i class="ri-pencil-line"></i>
+                </div>
+
+                <textarea id="editor-nota" placeholder="Escreva a sua nota clínica aqui..."></textarea>
+            </div>
+        </div>
+
+        <!-- ÁREA DE LISTA -->
+        <div id="area-lista" class="area-lista" style="display: none;">
+            <div id="lista-notas" class="lista-notas"></div>
+        </div>
+
+        <!-- MENU FLUTUANTE -->
+        <div class="menu-flutuante" id="menuFlutuante">
+            <button id="btn-nova-nota" class="menu-btn active" title="Nova nota">
+                <i class="ri-add-line"></i>
+                <span>Nova</span>
+            </button>
+
+            <button id="btn-listar-notas" class="menu-btn" title="Ver todas as notas">
+                <i class="ri-list-check-2"></i>
+                <span>Lista</span>
+                <span id="badge-contador" class="badge">0</span>
+            </button>
+
+            <button id="btn-salvar" class="menu-btn btn-salvar" title="Salvar nota" style="display: none;">
+                <i class="ri-save-line"></i>
+                <span>Salvar</span>
+            </button>
+
+            <button id="btn-limpar-todas" class="menu-btn danger" title="Limpar todas as notas">
+                <i class="ri-delete-bin-line"></i>
+                <span>Limpar</span>
+            </button>
+        </div>
+    </section>
+
+          <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <!-- Topo: marca + botões -->
+        <div class="sf-topo">
+            <div class="sf-marca">
+                <div class="sf-marca-logo">
+                    <span class="sf-marca-icone"><i class="ri-heart-pulse-fill"></i></span>
+                    <div class="sf-marca-texto">
+                        <strong class="sf-marca-nome">MatClínica</strong>
+                        <span class="sf-marca-tagline">Fim dos Cálculos na Saúde</span>
+                    </div>
+                </div>
+                <p class="sf-marca-descricao">
+                    Ferramentas clínicas para profissionais e estudantes de saúde.
+                    Menos tempo nas contas, mais tempo a cuidar.
+                </p>
+            </div>
+
+            <div class="sf-acoes">
+                <a href="../index.html#reportar-erro" class="sf-acao">
+                    <i class="ri-error-warning-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Reportar Erro</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+                <a href="#" class="sf-acao">
+                    <i class="ri-google-play-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Baixar APP</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Corpo: ferramentas + aviso -->
+        <div class="sf-corpo">
+
+            <div class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Ferramentas</small>
+                    <h3>Outras Ferramentas</h3>
+                </div>
+
+                <nav class="sf-ferramentas">
+                    <a href="../dosagem/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-capsule-line"></i></span>
+                        <span class="sf-ferramenta-nome">Cálculo de Dosagem</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../formula_internacional/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-global-line"></i></span>
+                        <span class="sf-ferramenta-nome">Fórmula Internacional</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../sinais_vitais/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-heart-pulse-line"></i></span>
+                        <span class="sf-ferramenta-nome">Sinais Vitais</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../gotejamento/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-water-flash-line"></i></span>
+                        <span class="sf-ferramenta-nome">Gotejamento</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                </nav>
+
+                <a href="../index.html#ferramentas" class="sf-ver-todas">
+                    <span>Ver todas as ferramentas</span>
+                    <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+
+            <aside class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Rigor Científico &amp; Confiabilidade</small>
+                    <h3>Aviso Importante</h3>
+                </div>
+
+                <div class="sf-aviso">
+                    <i class="ri-alert-line"></i>
+                    <p>Esta ferramenta é um auxiliar de cálculo. A conferência com os protocolos institucionais e bula,
+                        bem como a opinião médica, são indispensáveis.</p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Base: copyright -->
+        <div class="sf-base">
+            <span class="sf-base-info">
+                <strong>Mpindi TecMed</strong>
+                <em>·</em>
+                <span>Plataforma MatClínica</span>
+            </span>
+            <span class="sf-copyright">© 2026 Mpindi TecMed</span>
+        </div>
+
+    </footer>
+
+    
+    <script src="../assets/js/persistencia.js"></script>
+
+    <script>AOS.init({ duration: 800 });</script>
+    <script src="script.js"></script>
+</body>
+</html>

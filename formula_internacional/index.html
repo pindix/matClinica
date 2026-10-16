@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+
+<head>
+
+
+    <style>
+        /* Tema inline para evitar flash branco */
+        :root {
+            --bg-inline: white;
+            --text-inline: #1a2a21;
+        }
+
+        [data-theme="dark"] {
+            --bg-inline: black;
+            --text-inline: white;
+        }
+
+        /* Aplica o fundo imediatamente */
+        html {
+            background-color: var(--bg-inline);
+        }
+
+        body {
+            background-color: var(--bg-inline);
+            color: var(--text-inline);
+        }
+
+        /* Força o fundo antes do JS carregar */
+        body::before {
+            display: none;
+        }
+    </style>
+
+    <script>
+        // Ler tema do localStorage ANTES do CSS carregar
+        (function () {
+            const tema = localStorage.getItem('tema');
+            if (tema === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórmula Internacional | MatClínica</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+
+    <!-- ==========================================
+   FAVICON (Usando o logo da MatClínica)
+=========================================== -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/imagens/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/imagens/logo.png">
+    <link rel="apple-touch-icon" href="../assets/imagens/logo.png">
+
+
+
+</head>
+
+<body>
+
+
+
+    <!-- ============================================================ -->
+    <!-- BARRA SUPERIOR - WEB STYLE                                 -->
+    <!-- ============================================================ -->
+    <header class="web-header">
+        <!-- Card com os controles -->
+        <div class="header-controls">
+            <a href="../index.html" class="btn-icon" title="Início">
+                <i class="ri-arrow-left-line"></i>
+                <span>Início</span>
+            </a>
+            <span class="divider-header">|</span>
+            <a href="../ajuda/index.html#internacional" class="btn-icon" title="Ajuda">
+                <i class="ri-question-line"></i>
+                <span>Ajuda</span>
+            </a>
+            <span class="divider-header">|</span>
+            <button class="btn-icon theme-toggle" id="themeBtn" title="Mudar Tema">
+                <i class="ri-moon-line" id="themeIcon"></i>
+                <span>Tema</span>
+            </button>
+        </div>
+
+        <!-- Título da ferramenta -->
+        <div class="header-title">
+            <span class="tool-badge">Fórmula Internacional</span>
+        </div>
+    </header>
+
+    <section class="main-tool">
+
+
+        <div class="calculator-box" data-aos="fade-up">
+
+            <div class="container-campos">
+                <div class="entradas_de_dados" style="grid-column: span 2;">
+                    <i class="ri-scales-2-fill"></i>
+                    <input type="number" placeholder="Peso..." id="peso">
+                    <label class="label-flutuante">Peso</label>
+                    <p>kg</p>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- SELECT DE DOSAGEM - COMPONENTE PERSONALIZADO                  -->
+                <!-- ============================================================ -->
+                <div class="entradas_de_dados" style="grid-column: span 3; position: relative; padding-right: 0;">
+                    <i class="ri-capsule-line"></i>
+                    <input type="number" placeholder="Dosagem..." id="dosagem">
+                    <label class="label-flutuante">Dose</label>
+
+                    <!-- Hidden input para manter compatibilidade -->
+                    <input type="hidden" id="unidade_de_dosagem" value="1">
+
+                    <!-- Componente personalizado -->
+                    <div class="custom-select-unidade" id="selectDosagem">
+                        <div class="custom-select-trigger-unidade" onclick="toggleUnidadeSelect('dosagem')">
+                            <span class="unidade-texto" id="unidadeDosagemSelecionada">mg/kg</span>
+                            <i class="ri-arrow-down-s-line unidade-arrow" id="unidadeDosagemArrow"></i>
+                        </div>
+                        <div class="custom-select-options-unidade" id="unidadeDosagemOptions">
+                            <!-- Opções geradas dinamicamente pelo JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================ -->
+                <!-- SELECT DE CONCENTRAÇÃO - COMPONENTE PERSONALIZADO            -->
+                <!-- ============================================================ -->
+                <div class="entradas_de_dados" style="grid-column: span 3; position: relative; padding-right: 0;">
+                    <i class="ri-bubble-chart-line"></i>
+                    <input type="number" placeholder=" " id="concentracao">
+                    <label class="label-flutuante">Concentração</label>
+
+                    <!-- Hidden input para manter compatibilidade -->
+                    <input type="hidden" id="unidade_de_concentracao" value="1">
+
+                    <!-- Componente personalizado -->
+                    <div class="custom-select-unidade" id="selectConcentracao">
+                        <div class="custom-select-trigger-unidade" onclick="toggleUnidadeSelect('concentracao')">
+                            <span class="unidade-texto" id="unidadeConcentracaoSelecionada">mg/ml</span>
+                            <i class="ri-arrow-down-s-line unidade-arrow" id="unidadeConcentracaoArrow"></i>
+                        </div>
+                        <div class="custom-select-options-unidade" id="unidadeConcentracaoOptions">
+                            <!-- Opções geradas dinamicamente pelo JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="entradas_de_dados" style="grid-column: span 2;">
+                    <i class="ri-time-line"></i>
+                    <input type="number" placeholder="Intervalo..." id="intervalo">
+                    <label class="label-flutuante">Intervalo</label>
+                    <p>h</p>
+                </div>
+
+
+            </div>
+
+
+
+            <div class="caxa_de_botoes">
+                <button class="botao" onclick="calcular()">Calcular</button>
+                <i class="ri-delete-bin-line" id="limpador" onclick="limpar()"></i>
+            </div>
+
+        </div>
+        <p class="resultado-display" id="resultado" data-aos="fade-up" data-aos-delay="100"></p>
+
+
+    </section>
+
+      <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <!-- Topo: marca + botões -->
+        <div class="sf-topo">
+            <div class="sf-marca">
+                <div class="sf-marca-logo">
+                    <span class="sf-marca-icone"><i class="ri-heart-pulse-fill"></i></span>
+                    <div class="sf-marca-texto">
+                        <strong class="sf-marca-nome">MatClínica</strong>
+                        <span class="sf-marca-tagline">Fim dos Cálculos na Saúde</span>
+                    </div>
+                </div>
+                <p class="sf-marca-descricao">
+                    Ferramentas clínicas para profissionais e estudantes de saúde.
+                    Menos tempo nas contas, mais tempo a cuidar.
+                </p>
+            </div>
+
+            <div class="sf-acoes">
+                <a href="../index.html#reportar-erro" class="sf-acao">
+                    <i class="ri-error-warning-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Reportar Erro</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+                <a href="#" class="sf-acao">
+                    <i class="ri-google-play-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Baixar APP</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Corpo: ferramentas + aviso -->
+        <div class="sf-corpo">
+
+            <div class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Ferramentas</small>
+                    <h3>Outras Ferramentas</h3>
+                </div>
+
+                <nav class="sf-ferramentas">
+                    <a href="../dosagem/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-capsule-line"></i></span>
+                        <span class="sf-ferramenta-nome">Cálculo de Dosagem</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../gestograma/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-global-line"></i></span>
+                        <span class="sf-ferramenta-nome">Gestograma</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../sinais_vitais/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-heart-pulse-line"></i></span>
+                        <span class="sf-ferramenta-nome">Sinais Vitais</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../gotejamento/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-water-flash-line"></i></span>
+                        <span class="sf-ferramenta-nome">Gotejamento</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                </nav>
+
+                <a href="../index.html#ferramentas" class="sf-ver-todas">
+                    <span>Ver todas as ferramentas</span>
+                    <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+
+            <aside class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Rigor Científico &amp; Confiabilidade</small>
+                    <h3>Aviso Importante</h3>
+                </div>
+
+                <div class="sf-aviso">
+                    <i class="ri-alert-line"></i>
+                    <p>Esta ferramenta é um auxiliar de cálculo. A conferência com os protocolos institucionais e bula,
+                        bem como a opinião médica, são indispensáveis.</p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Base: copyright -->
+        <div class="sf-base">
+            <span class="sf-base-info">
+                <strong>Mpindi TecMed</strong>
+                <em>·</em>
+                <span>Plataforma MatClínica</span>
+            </span>
+            <span class="sf-copyright">© 2026 Mpindi TecMed</span>
+        </div>
+
+    </footer>
+
+
+
+
+    <script src="../assets/js/persistencia.js"></script>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+
+<head>
+    
+    
+    
+    
+    <style>
+    /* Tema inline para evitar flash branco */
+    :root {
+        --bg-inline: white;
+        --text-inline: #1a2a21;
+    }
+    
+    [data-theme="dark"] {
+        --bg-inline: black;
+        --text-inline: white;
+    }
+    
+    /* Aplica o fundo imediatamente */
+    html {
+        background-color: var(--bg-inline);
+    }
+    
+    body {
+        background-color: var(--bg-inline);
+        color: var(--text-inline);
+    }
+    
+    /* Força o fundo antes do JS carregar */
+    body::before {
+        display: none;
+    }
+</style>
+
+<script>
+    // Ler tema do localStorage ANTES do CSS carregar
+    (function() {
+        const tema = localStorage.getItem('tema');
+        if (tema === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    })();
+</script> 
+    
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Técnico | MatClínica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- ==========================================
+   FAVICON (Usando o logo da MatClínica)
+=========================================== -->
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/imagens/logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/imagens/logo.png">
+<link rel="apple-touch-icon" href="../../assets/imagens/logo.png">
+    
+    
+</head>
+
+<body class="ajuda-body">
+    
+    <nav class="ajuda-nav-glass">
+        <a href="../index.html" class="btn-voltar-estilizado" title="Voltar ao Início">
+            <i class="ri-home-4-line"></i>
+        </a>
+        <span style="font-weight: 600; font-size: 0.95rem; color: var(--text);">Guia de Uso</span>
+        <button class="theme-toggle" id="themeBtn" style="position: relative; top: 0; right: 0; padding: 0; background: none; box-shadow: none; color: var(--primary);">
+            <i class="ri-moon-line" id="themeIcon"></i>
+        </button>
+    </nav>
+    
+    <div class="help-container-main">
+        <header class="tool-header" style="margin-top: 4rem;">
+            <h1 style="color: var(--primary); font-size: 1.8rem; font-weight: 700;">Como funciona cada ferramenta?</h1>
+            <p style="opacity: 0.7; font-size: 0.9rem;">Entenda a lógica e as referências por trás de cada cálculo da plataforma.</p>
+        </header>
+        
+        
+        <main style="margin-top: 50px;">
+            <article class="guia-artigo" id="dosagem">
+                <h2><i class="ri-capsule-fill"></i> Cálculo de Dosagem</h2>
+                <h3>O que fazer</h3>
+                <p>Escolha a referência (OMS, MSF ou país específico), digite o nome do medicamento e preencha os campos solicitados (peso, idade, etc.). Clique em "Calcular" para obter a dose recomendada.</p>
+                <h3>Definição Técnica</h3>
+                <p>Calcula a dose terapêutica com base em diretrizes institucionais. A fórmula baseia-se na relação entre a dose prescrita por kg de peso e a concentração do fármaco disponível.</p>
+                <div class="formula-tecnica">Dose (ml) = (Dose prescrita × Peso) / Concentração</div>
+                <a href="../dosagem/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="internacional">
+                <h2><i class="ri-global-line"></i> Fórmula Internacional</h2>
+                <h3>O que fazer</h3>
+                <p>Insira o peso, a dosagem e a concentração do medicamento. Pode mudar as unidades da concentração e dose (mg, g, mg/5ml, g/ml, etc.) nos seletores. Em doses fixas não é necessário preencher o peso. O campo "Intervalo" é opcional: se preenchido, o sistema divide o volume a administrar pelo número de tomas quando a unidade da dose for diária (ex: mg/kg/dia).</p>
+                <h3>Definição Técnica</h3>
+                <p>Aplica a Regra de Três Simples para calcular o volume a administrar. Se a unidade da dose for diária (ex: mg/kg/dia), o volume a administrar é dividido pelo intervalo em horas para obter o volume por toma. Caso contrário, o intervalo é usado apenas para calcular o número de tomas.</p>
+                <div class="formula-tecnica">Volume (ml) = (Dose × Peso) / Concentração</div>
+                <a href="../formula_internacional/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="gotejamento">
+                <h2><i class="ri-drop-line"></i> Gotejamento</h2>
+                <h3>O que fazer</h3>
+                <p>Preencha apenas dois campos (Volume, Tempo, Macrogotas ou Microgotas). O sistema calcula os restantes automaticamente. Não pode preencher apenas gotas (macro ou micro) sem Volume ou Tempo.</p>
+                <h3>Definição Técnica</h3>
+                <p>Calcula a taxa de infusão venosa. A convenção médica estabelece que 1 ml = 20 macrogotas = 60 microgotas. A fórmula base é: Gotas/min = Volume (ml) / (Tempo (h) × 3).</p>
+                <div class="formula-tecnica">Gotas/min = Volume Total (ml) / (Tempo em horas × 3)</div>
+                <a href="../gotejamento/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="conversor">
+                <h2><i class="ri-exchange-box-line"></i> Conversor de Recipiente</h2>
+                <h3>O que fazer</h3>
+                <p>Insira a concentração e a quantidade do frasco original, depois a concentração do novo recipiente. O sistema calcula o volume equivalente a usar no novo frasco.</p>
+                <h3>Definição Técnica</h3>
+                <p>Mantém a massa do princípio ativo ao transferir entre recipientes. Usa a regra: Massa = Concentração × Volume. O volume no novo recipiente é calculado como: V₂ = (C₁ × V₁) / C₂.</p>
+                <div class="formula-tecnica">V₂ = (Concentração₁ × Volume₁) / Concentração₂</div>
+                <a href="../conversor/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="diluicao">
+                <h2><i class="ri-flask-line"></i> Reconstituição de Medicamentos</h2>
+                <h3>O que fazer</h3>
+                <p>Informe a massa do fármaco (ex: 500 mg) e o volume de diluente adicionado ao frasco. O sistema calcula a concentração final em mg/ml. Se desejar, insira a dose indicada para saber o volume a administrar. As unidades podem ser alteradas nos seletores.</p>
+                <h3>Definição Técnica</h3>
+                <p>Calcula a concentração final após reconstituição de um pó ou liofilizado. A fórmula baseia-se na relação: Concentração = Massa do fármaco / Volume total da solução. Este cálculo é essencial para preparar medicamentos injetáveis como antibióticos, antifúngicos e quimioterápicos.</p>
+                <div class="formula-tecnica">Concentração Final = Massa do Fármaco / Volume Total</div>
+                <a href="../diluicao/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="exames">
+                <h2><i class="ri-search-eye-line"></i> Laboratório e Escalas</h2>
+                <h3>O que fazer</h3>
+                <p>Insira os valores laboratoriais obtidos. O sistema processa os dados e indica se o resultado se
+                    encontra dentro do intervalo de referência ou se apresenta desvio clínico. <br>
+                    O sistema também analisa escalas, como índice de Apgar e muitas outras escalas.</p>
+                <h3>Definição Técnica</h3>
+                <p>Análise comparativa automática baseada em valores normativos laboratoriais para triagem rápida de
+                    resultados normais, anormais, positivos ou negativos.</p>
+                <a href="../exames/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à
+                    Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="sangue">
+                <h2><i class="ri-test-tube-line"></i> Compatibilidade ABO/Rh e Hereditariedade</h2>
+                <h3>O que fazer</h3>
+                <p>Selecione o grupo do paciente e do doador para verificar a compatibilidade. Selecione os grupos dos pais para prever os possíveis tipos sanguíneos dos filhos.</p>
+                <h3>Definição Técnica</h3>
+                <p>Baseia-se na genética mendeliana: os alelos A e B são dominantes sobre O. A compatibilidade segue a regra: o paciente pode receber apenas sangue que não contenha anticorpos contra os antigénios do seu próprio grupo.</p>
+                <a href="../sangue/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            
+            <article class="guia-artigo" id="gestograma">
+                <h2><i class="ri-calendar-check-line"></i> Gestograma (Cálculo Obstétrico)</h2>
+                <h3>O que fazer</h3>
+                <p>Escolha o modo de cálculo: DUM, IG, DPP ou Altura Uterina. Preencha os campos solicitados. O sistema calcula a idade gestacional, a DPP e o trimestre atual.</p>
+                <h3>Definição Técnica</h3>
+                <p>Aplica a Regra de Naegele: DPP = DUM + 280 dias (40 semanas). A IG é calculada subtraindo a DUM da data atual. Com a AU, usa-se a fórmula: IG (semanas) ≈ AU (cm) para gestações entre 20 e 32 semanas.</p>
+                <div class="formula-tecnica">DPP = DUM + 280 dias | IG = Data Atual - DUM</div>
+                <a href="../gestograma/index.html" class="link-ferramenta"><i class="ri-external-link-line"></i> Aceder à Ferramenta</a>
+            </article>
+            <article class="guia-artigo" id="pesoIdade">
+    <h2><i class="ri-scales-3-line"></i> Estimativa de Peso e Idade</h2>
+
+    <h3>O que fazer</h3>
+    <p>
+        Escolha o modo pretendido: <strong>Estimar Idade pelo Peso</strong> ou
+        <strong>Estimar Peso pela Idade</strong>. Depois, selecione a
+        <strong>fórmula</strong> que melhor se adequa ao contexto clínico
+        (por faixa etária ou por população) e insira o valor correspondente.
+        Clique em <strong>Calcular</strong> para obter a estimativa.
+    </p>
+
+    <p>
+        Ferramenta restrita a <strong>pacientes pediátricos</strong>
+        (até 14 anos ou 50 kg).
+    </p>
+
+    <h3>Definição Técnica</h3>
+    <p>
+        A estimativa é feita com base em fórmulas antropométricas pediátricas
+        validadas. Cada fórmula devolve um valor aproximado — a precisão varia
+        com a população onde foi derivada e com o perfil da criança avaliada.
+    </p>
+
+    
+
+    <p>
+        As fórmulas disponíveis incluem:
+        <strong>Fórmula Única</strong>, <strong>APLS</strong>,
+        <strong>Best Guess</strong>, <strong>Luscombe &amp; Owens</strong>,
+        <strong>Michigan</strong> e <strong>OMS / Portugal</strong>
+        (por população). Para inversão (peso → idade), isola-se a variável alvo
+        na fórmula selecionada.
+    </p>
+
+    <p>
+        <strong>Atenção:</strong> estas fórmulas são auxiliares. Em emergências,
+        prefira sempre o peso real medido, a fita de Broselow ou o comprimento
+        da criança.
+    </p>
+
+    <a href="../peso_idade/index.html" class="link-ferramenta">
+        <i class="ri-external-link-line"></i> Aceder à Ferramenta
+    </a>
+</article>
+            <article class="guia-artigo" id="sinais">
+    <h2><i class="ri-heart-pulse-line"></i> Análise de Sinais Vitais</h2>
+
+    <h3>O que fazer</h3>
+    <p>
+        Preencha um ou mais campos disponíveis:
+        <strong>Frequência Cardíaca</strong> (bpm),
+        <strong>Frequência Respiratória</strong> (ipm),
+        <strong>Temperatura</strong> (°C),
+        <strong>Saturação de Oxigénio</strong> (SpO₂, em %)
+        e/ou <strong>Tensão Arterial</strong> (sistólica/diastólica, em mmHg).
+        Clique em <strong>Interpretar</strong> para ver o resultado.
+    </p>
+
+    <p>
+        Antes de interpretar, podes:
+    </p>
+    <ul class="lista-tecnica">
+        <li>Definir a <strong>idade do paciente</strong> (anos, meses, semanas ou dias) no painel de referências — isto ajusta automaticamente as faixas normais por faixa etária.</li>
+        <li>Escolher a <strong>fonte de referência</strong> para cada sinal, individualmente (ex: FC pela OMS, Temp pela Medscape, TA pela AHA/ACC).</li>
+        <li>Selecionar o <strong>local de medição da temperatura</strong> (oral, axilar, timpânico ou retal), pois os valores normais variam com o local.</li>
+    </ul>
+
+    <p>
+        Se tiveres um paciente registado, também podes guardar cada medição no
+        <strong>histórico</strong> para acompanhar a evolução em gráfico e exportar
+        um <strong>relatório em PDF</strong>.
+    </p>
+    <p>
+        Quando há um paciente com histórico, o sistema calcula ainda um
+        <strong>nível de triagem</strong> (🔴 Crítico · 🟠 Muito Urgente · 🟡 Urgente ·
+        🟢 Pouco Urgente · 🔵 Não Urgente) com base na última medição,
+        permitindo ordenar a lista de pacientes por prioridade clínica.
+    </p>
+
+    <h3>Definição Técnica</h3>
+
+    <p>
+        Cada sinal é comparado com a faixa de referência correspondente à
+        <strong>idade</strong> e à <strong>fonte selecionada</strong>.
+        O sistema classifica o valor como <em>Normal</em>, <em>Baixo</em> ou
+        <em>Alto</em> e devolve também o <strong>termo clínico</strong> associado
+        (ex: Bradicardia, Taquipneia, Hipotermia, Hipoxemia).
+    </p>
+
+
+
+
+    <a href="../sinais_vitais/index.html" class="link-ferramenta">
+        <i class="ri-external-link-line"></i> Aceder à Ferramenta
+    </a>
+</article>
+        </main>
+         
+        
+    </div>
+    
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const themeBtn = document.getElementById('themeBtn'); 
+    const themeIcon = document.getElementById('themeIcon');
+    const root = document.documentElement;
+
+    function aplicarTema(tema) {
+
+        root.setAttribute('data-theme', tema);
+
+        localStorage.setItem('matclinica-theme', tema);
+
+        if (themeIcon) {
+            if (tema === 'dark') {
+                themeIcon.className = 'ri-sun-line';
+                themeBtn.setAttribute(
+                    'aria-label',
+                    'Mudar para tema claro'
+                );
+            } else {
+                themeIcon.className = 'ri-moon-line';
+                themeBtn.setAttribute(
+                    'aria-label',
+                    'Mudar para tema escuro'
+                );
+            }
+        }
+    }
+
+    function obterTema() {
+        return localStorage.getItem('matclinica-theme') || 'light';
+    }
+
+    /* Aplicar tema inicial */
+    aplicarTema(obterTema());
+
+    /* Alternar tema */
+    if (themeBtn) {
+
+        themeBtn.addEventListener('click', () => {
+
+            const temaAtual = obterTema();
+
+            const novoTema =
+                temaAtual === 'dark'
+                    ? 'light'
+                    : 'dark';
+
+            aplicarTema(novoTema);
+        });
+
+    }
+
+});
+</script>
+</body>
+
+</html>

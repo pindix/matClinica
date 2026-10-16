@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-pt" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Dosagem — MatClínica</title>
+
+    <!-- Fontes e Ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/imagens/logo.png">
+
+    <style>
+        :root {
+            --primary: #00843d;
+            --primary-dark: #00632e;
+            --primary-soft: rgba(0, 132, 61, 0.06);
+            --bg-system: #f3f6f4;
+            --bg-canvas: #ffffff;
+            --text-main: #111a14;
+            --text-muted: #526357;
+            --borda-bento: rgba(0, 132, 61, 0.1);
+            --radius-pill: 40px;
+            --radius-md: 16px;
+            --transition-smooth: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-system);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 3rem 2rem;
+        }
+
+        .dev-wrapper {
+            max-width: 680px;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* Botão / Ícone de Início */
+        .btn-inicio-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-canvas);
+            color: var(--text-main);
+            border: 1.5px solid var(--borda-bento);
+            text-decoration: none;
+            font-size: 1.35rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+            transition: var(--transition-smooth);
+        }
+
+        .btn-inicio-icon:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 22px rgba(0, 132, 61, 0.2);
+        }
+
+        /* Cabeçalho: Título + Badge lado a lado */
+        .title-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 1.25rem;
+        }
+
+        .dev-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            line-height: 1.15;
+        }
+
+        .badge-dev {
+            background-color: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(146, 64, 14, 0.05);
+        }
+
+        .badge-dev i {
+            font-size: 0.9rem;
+        }
+
+        /* Descrição */
+        .dev-desc {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.75;
+            margin-bottom: 2.75rem;
+            max-width: 600px;
+            font-weight: 400;
+        }
+
+        /* Botão Ação */
+        .btn-outras-ferramentas {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 32px;
+            border-radius: var(--radius-pill);
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 0.98rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 12px 28px rgba(0, 132, 61, 0.24);
+            transition: var(--transition-smooth);
+        }
+
+        .btn-outras-ferramentas:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(0, 132, 61, 0.35);
+        }
+
+        .btn-outras-ferramentas i {
+            font-size: 1.15rem;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 2rem 1.25rem;
+            }
+
+            .dev-title {
+                font-size: 1.85rem;
+            }
+
+            .dev-desc {
+                font-size: 1rem;
+            }
+
+            .btn-outras-ferramentas {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dev-wrapper">
+        
+        <!-- 1. Ícone de Início -->
+        <a href="../index.html" class="btn-inicio-icon" title="Voltar ao Início" aria-label="Início">
+            <i class="ri-home-4-line"></i>
+        </a>
+
+        <!-- 2. Cálculo de Dosagem (Título) + Badge (Em desenvolvimento) -->
+        <div class="title-header">
+            <h1 class="dev-title">Cálculo de Dosagem</h1>
+            <span class="badge-dev">
+                <i class="ri-time-line"></i>
+                Em desenvolvimento
+            </span>
+        </div>
+
+        <!-- 3. Dizeres -->
+        <p class="dev-desc">
+            Estamos a trabalhar nesta ferramenta. Ainda não temos fontes totalmente seguras para validar e exibir os cálculos com a precisão exigida.
+        </p>
+
+        <!-- 4. Ver outras ferramentas -->
+        <a href="../index.html#ferramentas" class="btn-outras-ferramentas">
+            <i class="ri-apps-2-line"></i>
+            <span>Ver outras ferramentas</span>
+        </a>
+
+    </div>
+
+</body>
+
+</html>

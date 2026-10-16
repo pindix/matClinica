@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+<head>
+    
+    
+    <style>
+    /* Tema inline para evitar flash branco */
+    :root {
+        --bg-inline: white;
+        --text-inline: #1a2a21;
+    }
+    
+    [data-theme="dark"] {
+        --bg-inline: black;
+        --text-inline: white;
+    }
+    
+    /* Aplica o fundo imediatamente */
+    html {
+        background-color: var(--bg-inline);
+    }
+    
+    body {
+        background-color: var(--bg-inline);
+        color: var(--text-inline);
+    }
+    
+    /* Força o fundo antes do JS carregar */
+    body::before {
+        display: none;
+    }
+</style>
+
+<script>
+    // Ler tema do localStorage ANTES do CSS carregar
+    (function() {
+        const tema = localStorage.getItem('tema');
+        if (tema === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.body.setAttribute('data-theme', 'dark');
+        }
+    })();
+</script> 
+    
+    
+    
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antropometria | MatClínica</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- ==========================================
+   FAVICON (Usando o logo da MatClínica)
+=========================================== -->
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/imagens/logo.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/imagens/logo.png">
+<link rel="apple-touch-icon" href="../assets/imagens/logo.png">
+    
+</head>
+<body>
+
+
+    <!-- ============================================================ -->
+    <!-- BARRA SUPERIOR - WEB STYLE                                 -->
+    <!-- ============================================================ -->
+    <header class="web-header">
+        <!-- Card com os controles -->
+        <div class="header-controls">
+            <a href="../index.html" class="btn-icon" title="Início">
+                <i class="ri-arrow-left-line"></i>
+                <span>Início</span>
+            </a>
+            <span class="divider-header">|</span>
+            <a href="../ajuda/index.html#pesoIdade" class="btn-icon" title="Ajuda">
+                <i class="ri-question-line"></i>
+                <span>Ajuda</span>
+            </a>
+            <span class="divider-header">|</span>
+            <button class="btn-icon theme-toggle" id="themeBtn" title="Mudar Tema">
+                <i class="ri-moon-line" id="themeIcon"></i>
+                <span>Tema</span>
+            </button>
+        </div>
+
+        <!-- Título da ferramenta -->
+        <div class="header-title">
+            <span class="tool-badge">Peso ⇄ Idade</span>
+        </div>
+    </header>
+    
+    <section class="main-tool">
+        
+        <div class="calculator-box" data-aos="fade-up">
+            
+            <!-- ============================================================ -->
+            <!-- LINHA HORIZONTAL: SELECT DE MODO + INPUT                     -->
+            <!-- ============================================================ -->
+            <div class="linha-horizontal">
+                
+                <!-- Select de modo -->
+                <div class="custom-select-antropometria" id="selectModo">
+                    <input type="hidden" id="modo_calculo" value="pesoParaIdade">
+                    <div class="custom-select-trigger-antropometria" onclick="toggleModoSelect()">
+                        <span class="select-label-flutuante">Modo</span>
+                        <span class="modo-texto" id="modoSelecionado">Estimar Idade pelo Peso</span>
+                        <i class="ri-arrow-down-s-line modo-arrow" id="modoArrow"></i>
+                    </div>
+                    <div class="custom-select-options-antropometria" id="modoOptions">
+                        <div class="custom-select-option-antropometria" data-value="pesoParaIdade" onclick="selecionarModo('pesoParaIdade', 'Estimar Idade pelo Peso')">
+                            <span class="option-label">Estimar Idade pelo Peso</span>
+                        </div>
+                        <div class="custom-select-option-antropometria" data-value="idadeParaPeso" onclick="selecionarModo('idadeParaPeso', 'Estimar Peso pela Idade')">
+                            <span class="option-label">Estimar Peso pela Idade</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Input de valor -->
+                <div class="entradas_de_dados">
+                    <i id="icone_input" class="ri-scales-3-line"></i>
+                    <input type="number" id="valor_entrada" placeholder=" " oninput="removerValorErro()">
+                    <label id="label_dinamica" class="label-flutuante">Peso Atual (kg)</label>
+                    <p id="unidade_dinamica">kg</p>
+                </div>
+                
+            </div>
+            
+            <!-- ============================================================ -->
+            <!-- SELECT DE FÓRMULA (DUAS COLUNAS)                             -->
+            <!-- ============================================================ -->
+            <div class="custom-select-formula" id="selectFormula">
+                <input type="hidden" id="formula_escolhida" value="unica">
+                <input type="hidden" id="formula_tipo" value="faixaEtaria">
+                <div class="custom-select-trigger-antropometria" onclick="toggleFormulaSelect()">
+                    <span class="select-label-flutuante">Fórmula</span>
+                    <span class="modo-texto" id="formulaSelecionada">Fórmula única</span>
+                    <i class="ri-arrow-down-s-line modo-arrow"></i>
+                </div>
+                <div class="custom-select-options-antropometria" id="formulaOptions">
+                    <div class="formula-columns">
+                        
+                        <!-- Coluna 1: Fórmulas por faixa etária -->
+                        <div class="formula-column">
+                            <div class="formula-column-title">Por faixa etária</div>
+                            
+                            <div class="formula-option selecionado" data-tipo="faixaEtaria" data-value="unica" onclick="selecionarFormula('faixaEtaria', 'unica', 'Fórmula única')">
+                                <span class="formula-nome">Fórmula única</span>
+                                <span class="formula-desc">Acerta ~35% dentro de ±10% do peso real</span>
+                            </div>
+                            
+                            <div class="formula-divider"></div>
+                            
+                            <div class="formula-option" data-tipo="faixaEtaria" data-value="apls" onclick="selecionarFormula('faixaEtaria', 'apls', 'APLS (Original)')">
+                                <span class="formula-nome">APLS (Original)</span>
+                                <span class="formula-desc">Acerta ~35% dentro de ±10% do peso real</span>
+                            </div>
+                            
+                            <div class="formula-option" data-tipo="faixaEtaria" data-value="bestguess" onclick="selecionarFormula('faixaEtaria', 'bestguess', 'Best Guess')">
+                                <span class="formula-nome">Best Guess</span>
+                                <span class="formula-desc">Acerta ~44% dentro de ±10% do peso real</span>
+                            </div>
+                            
+                            <div class="formula-option" data-tipo="faixaEtaria" data-value="luscombe" onclick="selecionarFormula('faixaEtaria', 'luscombe', 'Luscombe & Owens')">
+                                <span class="formula-nome">Luscombe &amp; Owens</span>
+                                <span class="formula-desc">Acerta ~50% dentro de ±10% do peso real</span>
+                            </div>
+                            
+                            <div class="formula-option" data-tipo="faixaEtaria" data-value="michigan" onclick="selecionarFormula('faixaEtaria', 'michigan', 'Michigan')">
+                                <span class="formula-nome">Michigan</span>
+                                <span class="formula-desc">Acerta ~92% dentro de ±10% do peso real</span>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- Coluna 2: Fórmulas por população -->
+                        <div class="formula-column">
+                            <div class="formula-column-title">Por população</div>
+                            
+                            <div class="formula-option" data-tipo="populacao" data-value="oms" onclick="selecionarFormula('populacao', 'oms', 'OMS (Genérica)')">
+                                <span class="formula-nome">OMS (Genérica)</span>
+                                <span class="formula-desc">Curvas de crescimento da OMS</span>
+                            </div>
+                            
+                            <div class="formula-option" data-tipo="populacao" data-value="portugal" onclick="selecionarFormula('populacao', 'portugal', 'Portugal')">
+                                <span class="formula-nome">Portugal</span>
+                                <span class="formula-desc">Curvas de crescimento portuguesas</span>
+                            </div>
+                            
+                            <div class="formula-option desabilitado" data-tipo="populacao" data-value="angola">
+                                <span class="formula-nome">Angola</span>
+                                <span class="formula-desc">Em breve</span>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ============================================================ -->
+            <!-- BOTÕES -->
+            <!-- ============================================================ -->
+            <div class="caxa_de_botoes">
+                <button class="botao" onclick="calcularAntropometria()">Calcular</button>
+                <div id="limpador" onclick="limparAntropometria()">
+                    <i class="ri-delete-bin-line"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ============================================================ -->
+        <!-- CARD ÚNICO: RESULTADO + INFORMAÇÃO                           -->
+        <!-- ============================================================ -->
+        <div class="resultado-info-card" data-aos="fade-up">
+            
+            <!-- Resultado -->
+            <div class="resultado-display" id="resultado">
+                <i class="ri-checkbox-circle-fill res-icon"></i>
+                <span class="res-titulo">~ 0</span>
+                <span class="res-sub">Aguardando cálculo</span>
+            </div>
+            
+            <!-- Info card -->
+            <div class="info-card" id="infoCard">
+                <div class="info-card-header">
+                    <i class="ri-information-line info-icon"></i>
+                    <span class="info-card-title">Informação da Fórmula</span>
+                </div>
+                <div class="info-card-body">
+                    <div class="info-row">
+                        <span class="info-label">Fórmula:</span>
+                        <span class="info-value" id="infoFormula">Fórmula única</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Precisão:</span>
+                        <span class="info-value" id="infoPrecisao">Moderada</span>
+                    </div>
+                    <div class="info-row info-row-desc">
+                        <span class="info-desc" id="infoDescricao">Acerta ~35% dentro de ±10% do peso real.</span>
+                    </div>
+                    <div class="info-row info-row-aviso">
+                        <i class="ri-alert-line info-aviso-icon"></i>
+                        <span class="info-aviso" id="infoAviso">Prefira peso real ou fita de Broselow em emergências.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="nota"><i class="ri-alert-line"></i> Atenção: Cálculo restrito a pacientes pediátricos (até 14 anos ou 50kg).</p>
+    </section>
+     
+      <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <!-- Topo: marca + botões -->
+        <div class="sf-topo">
+            <div class="sf-marca">
+                <div class="sf-marca-logo">
+                    <span class="sf-marca-icone"><i class="ri-heart-pulse-fill"></i></span>
+                    <div class="sf-marca-texto">
+                        <strong class="sf-marca-nome">MatClínica</strong>
+                        <span class="sf-marca-tagline">Fim dos Cálculos na Saúde</span>
+                    </div>
+                </div>
+                <p class="sf-marca-descricao">
+                    Ferramentas clínicas para profissionais e estudantes de saúde.
+                    Menos tempo nas contas, mais tempo a cuidar.
+                </p>
+            </div>
+
+            <div class="sf-acoes">
+                <a href="../index.html#reportar-erro" class="sf-acao">
+                    <i class="ri-error-warning-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Reportar Erro</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+                <a href="#" class="sf-acao">
+                    <i class="ri-google-play-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Baixar APP</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Corpo: ferramentas + aviso -->
+        <div class="sf-corpo">
+
+            <div class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Ferramentas</small>
+                    <h3>Outras Ferramentas</h3>
+                </div>
+
+                <nav class="sf-ferramentas">
+                    <a href="../dosagem/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-capsule-line"></i></span>
+                        <span class="sf-ferramenta-nome">Cálculo de Dosagem</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../formula_internacional/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-global-line"></i></span>
+                        <span class="sf-ferramenta-nome">Fórmula Internacional</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../sinais_vitais/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-heart-pulse-line"></i></span>
+                        <span class="sf-ferramenta-nome">Sinais Vitais</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../gotejamento/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-water-flash-line"></i></span>
+                        <span class="sf-ferramenta-nome">Gotejamento</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                </nav>
+
+                <a href="../index.html#ferramentas" class="sf-ver-todas">
+                    <span>Ver todas as ferramentas</span>
+                    <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+
+            <aside class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Rigor Científico &amp; Confiabilidade</small>
+                    <h3>Aviso Importante</h3>
+                </div>
+
+                <div class="sf-aviso">
+                    <i class="ri-alert-line"></i>
+                    <p>Esta ferramenta é um auxiliar de cálculo. A conferência com os protocolos institucionais e bula,
+                        bem como a opinião médica, são indispensáveis.</p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Base: copyright -->
+        <div class="sf-base">
+            <span class="sf-base-info">
+                <strong>Mpindi TecMed</strong>
+                <em>·</em>
+                <span>Plataforma MatClínica</span>
+            </span>
+            <span class="sf-copyright">© 2026 Mpindi TecMed</span>
+        </div>
+
+    </footer>
+
+    <script src="../assets/js/persistencia.js"></script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({duration: 800});</script>
+    <script src="script.js"></script>
+</body>
+</html>

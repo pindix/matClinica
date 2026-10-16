@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+
+<head>
+
+
+
+    <style>
+        /* Tema inline para evitar flash branco */
+        :root {
+            --bg-inline: white;
+            --text-inline: #1a2a21;
+        }
+
+        [data-theme="dark"] {
+            --bg-inline: black;
+            --text-inline: white;
+        }
+
+        /* Aplica o fundo imediatamente */
+        html {
+            background-color: var(--bg-inline);
+        }
+
+        body {
+            background-color: var(--bg-inline);
+            color: var(--text-inline);
+        }
+
+        /* Força o fundo antes do JS carregar */
+        body::before {
+            display: none;
+        }
+    </style>
+
+    <script>
+        // Ler tema do localStorage ANTES do CSS carregar
+        (function () {
+            const tema = localStorage.getItem('tema');
+            if (tema === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obstetrícia | MatClínica</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <!-- ==========================================
+   FAVICON (Usando o logo da MatClínica)
+=========================================== -->
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/imagens/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/imagens/logo.png">
+    <link rel="apple-touch-icon" href="../assets/imagens/logo.png">
+
+
+</head>
+
+<body>
+
+
+
+
+
+    <!-- ============================================================ -->
+    <!-- BARRA SUPERIOR - WEB STYLE                                 -->
+    <!-- ============================================================ -->
+    <header class="web-header">
+        <!-- Card com os controles -->
+        <div class="header-controls">
+            <a href="../index.html" class="btn-icon" title="Início">
+                <i class="ri-arrow-left-line"></i>
+                <span>Início</span>
+            </a>
+            <span class="divider-header">|</span>
+            <a href="../ajuda/index.html#gestograma" class="btn-icon" title="Ajuda">
+                <i class="ri-question-line"></i>
+                <span>Ajuda</span>
+            </a>
+            <span class="divider-header">|</span>
+            <button class="btn-icon theme-toggle" id="themeBtn" title="Mudar Tema">
+                <i class="ri-moon-line" id="themeIcon"></i>
+                <span>Tema</span>
+            </button>
+        </div>
+
+        <!-- Título da ferramenta -->
+        <div class="header-title">
+            <span class="tool-badge">Gestograma</span>
+        </div>
+    </header>
+
+    <!-- ================================================================== -->
+    <!-- CONTEÚDO PRINCIPAL -->
+    <!-- ================================================================== -->
+    <section class="main-tool" id="mainTool">
+
+        <div class="coluna-esquerda">
+
+            <div class="modo-select-container" id="modoSelectContainer">
+                <div class="custom-select" id="customSelect">
+                    <div class="custom-select-trigger" onclick="toggleModoSelect()">
+                        <span class="floating-label">Modo de Cálculo</span>
+                        <span id="modoSelecionado">Trabalhar com DUM</span>
+                        <i class="ri-arrow-down-s-line" id="modoArrow"></i>
+                    </div>
+                    <div class="custom-select-options" id="modoOptions">
+                        <div class="custom-select-option" data-value="dum" onclick="selecionarModo('dum')">
+                            <i class="ri-calendar-event-line"></i>
+                            <div class="option-content">
+                                <span class="option-titulo">Trabalhar com DUM</span>
+                                <span class="option-desc">Usar a Data da Última Menstruação para calcular o progresso da
+                                    gestação ou ciclo menstrual</span>
+                            </div>
+                        </div>
+                        <div class="custom-select-option" data-value="ig" onclick="selecionarModo('ig')">
+                            <i class="ri-bar-chart-2-line"></i>
+                            <div class="option-content">
+                                <span class="option-titulo">Trabalhar com Idade Gestacional</span>
+                                <span class="option-desc">Use a Idade Gestacional por ecografia para calcular a DPP e
+                                    DUM</span>
+                            </div>
+                        </div>
+                        <div class="custom-select-option" data-value="dpp" onclick="selecionarModo('dpp')">
+                            <i class="ri-calendar-event-fill"></i>
+                            <div class="option-content">
+                                <span class="option-titulo">Trabalhar com a DPP</span>
+                                <span class="option-desc">Use a DPP para achar a DUM e o progresso da gestação se
+                                    possível</span>
+                            </div>
+                        </div>
+                        <div class="custom-select-option" data-value="au" onclick="selecionarModo('au')">
+                            <i class="ri-ruler-line"></i>
+                            <div class="option-content">
+                                <span class="option-titulo">Trabalhar com Altura Uterina</span>
+                                <span class="option-desc">Use a Altura Uterina para ter um valor aproximado da idade
+                                    Gestacional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="calculator-box" data-aos="fade-up">
+
+                <div class="campos-dinamicos-container" id="camposContainer">
+
+                    <div class="modo-campos active" data-modo="dum">
+                        <div class="entradas_de_dados floating-group" id="dumField">
+                            <i class="ri-calendar-event-line"></i>
+                            <input type="date" id="dum_data" placeholder=" ">
+                            <label class="label-flutuante">Data da Última Menstruação (DUM)</label>
+                        </div>
+
+                        <div class="campos-semana" id="camposSemana">
+                            <label class="intervalo-label" style="grid-column: span 3;">Se não sabe a DUM, diga quando
+                                ela aconteceu</label>
+
+                            <div class="entradas_de_dados floating-group" style="flex: 2;">
+                                <i class="ri-calendar-event-line"></i>
+                                <select id="mes_dum">
+                                    <option value="0">Janeiro</option>
+                                    <option value="1">Fevereiro</option>
+                                    <option value="2">Março</option>
+                                    <option value="3">Abril</option>
+                                    <option value="4">Maio</option>
+                                    <option value="5">Junho</option>
+                                    <option value="6">Julho</option>
+                                    <option value="7">Agosto</option>
+                                    <option value="8">Setembro</option>
+                                    <option value="9">Outubro</option>
+                                    <option value="10">Novembro</option>
+                                    <option value="11">Dezembro</option>
+                                </select>
+                                <label class="label-flutuante">Mês</label>
+                            </div>
+
+                            <div class="entradas_de_dados floating-group" style="flex: 1;">
+                                <i class="ri-calendar-event-line"></i>
+                                <select id="semana_dum">
+                                    <option value="1">1ª semana</option>
+                                    <option value="2" selected>2ª semana</option>
+                                    <option value="3">3ª semana</option>
+                                    <option value="4">4ª semana</option>
+                                </select>
+                                <label class="label-flutuante">Semana</label>
+                            </div>
+                            <div class="entradas_de_dados floating-group" style="flex: 1;">
+                                <i class="ri-calendar-event-line"></i>
+                                <select id="ano_dum">
+                                    <option value="2025">2025</option>
+                                    <option value="2026" selected>2026</option>
+                                </select>
+                                <label class="label-flutuante">Ano</label>
+                            </div>
+                        </div>
+
+                        <div class="toggle-naosei-container">
+                            <label class="toggle-naosei-label">
+                                <span class="toggle-naosei-text">Não sei a data exata</span>
+                                <input type="checkbox" id="toggleNaoSeiDum">
+                                <span class="toggle-naosei-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modo-campos" data-modo="ig">
+                        <div class="entradas_de_dados floating-group" style="flex: 1;">
+                            <i class="ri-calendar-event-line"></i>
+                            <input type="number" id="ig_semanas" placeholder=" " min="0" max="44">
+                            <label class="label-flutuante">Semanas</label>
+                        </div>
+                        <div class="entradas_de_dados floating-group" style="flex: 1;">
+                            <i class="ri-calendar-event-line"></i>
+                            <input type="number" id="ig_dias" placeholder=" " min="0" max="6">
+                            <label class="label-flutuante">Dias</label>
+                        </div>
+                    </div>
+
+                    <div class="modo-campos" data-modo="dpp">
+                        <div class="entradas_de_dados floating-group">
+                            <i class="ri-calendar-event-line"></i>
+                            <input type="date" id="dpp_data" placeholder=" ">
+                            <label class="label-flutuante">Data Provável do Parto (DPP)</label>
+                        </div>
+                    </div>
+
+                    <div class="modo-campos" data-modo="au">
+                        <div class="entradas_de_dados floating-group">
+                            <i class="ri-ruler-line"></i>
+                            <input type="number" id="altura_uterina" placeholder=" " step="0.5" min="0" max="50">
+                            <label class="label-flutuante">Altura Uterina (cm)</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="intervalo-container">
+                    <label class="intervalo-label">Intervalo do Ciclo</label>
+                    <div class="intervalo-selector">
+                        <button class="intervalo-btn" id="intervaloMenos" aria-label="Diminuir">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <div class="intervalo-valores-wrapper">
+                            <div class="intervalo-valores" id="intervaloValores">
+                                <span class="intervalo-valor" data-valor="21">21</span>
+                                <span class="intervalo-valor" data-valor="22">22</span>
+                                <span class="intervalo-valor" data-valor="23">23</span>
+                                <span class="intervalo-valor" data-valor="24">24</span>
+                                <span class="intervalo-valor" data-valor="25">25</span>
+                                <span class="intervalo-valor" data-valor="26">26</span>
+                                <span class="intervalo-valor" data-valor="27">27</span>
+                                <span class="intervalo-valor ativo" data-valor="28">28</span>
+                                <span class="intervalo-valor" data-valor="29">29</span>
+                                <span class="intervalo-valor" data-valor="30">30</span>
+                                <span class="intervalo-valor" data-valor="31">31</span>
+                            </div>
+                        </div>
+                        <span class="intervalo-unidade">dias</span>
+                        <button class="intervalo-btn" id="intervaloMais" aria-label="Aumentar">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="toggle-horizontal-container" id="toggleContainer">
+                    <div class="toggle-horizontal">
+                        <input type="checkbox" id="toggleModo">
+                        <label for="toggleModo" class="toggle-horizontal-label">
+                            <span class="toggle-option toggle-option-left">Ciclo Menstrual</span>
+                            <span class="toggle-option toggle-option-right">Gestação</span>
+                            <span class="toggle-slider-horizontal"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="caxa_de_botoes">
+                    <button class="botao" id="btnCalcular">Calcular DPP e IG</button>
+                    <div id="limpador" onclick="limparObstetricia()">
+                        <i class="ri-delete-bin-line"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="resultado-display" id="resultado"></div>
+
+            <div class="aviso-data">
+                <span class="intervalo-label">
+                    <i class="ri-information-line"></i>
+                    Certifique-se de que a data do seu dispositivo está correta. É a data usada para os cálculos!
+                </span>
+            </div>
+
+        </div>
+
+
+
+        <div class="detalhes-medicos-painel" id="detalhesMedicosPainel">
+            <div class="detalhes-medicos-header">
+                <div class="detalhes-medicos-header-titulo">
+                    <i class="ri-stethoscope-line"></i>
+                    <span>Detalhes Médicos</span>
+                </div>
+                <button class="detalhes-medicos-fechar" onclick="fecharDetalhesMedicos()" aria-label="Fechar">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="detalhes-medicos-scroll" id="detalhesMedicosScroll"></div>
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <!-- Topo: marca + botões -->
+        <div class="sf-topo">
+            <div class="sf-marca">
+                <div class="sf-marca-logo">
+                    <span class="sf-marca-icone"><i class="ri-heart-pulse-fill"></i></span>
+                    <div class="sf-marca-texto">
+                        <strong class="sf-marca-nome">MatClínica</strong>
+                        <span class="sf-marca-tagline">Fim dos Cálculos na Saúde</span>
+                    </div>
+                </div>
+                <p class="sf-marca-descricao">
+                    Ferramentas clínicas para profissionais e estudantes de saúde.
+                    Menos tempo nas contas, mais tempo a cuidar.
+                </p>
+            </div>
+
+            <div class="sf-acoes">
+                <a href="../index.html#reportar-erro" class="sf-acao">
+                    <i class="ri-error-warning-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Reportar Erro</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+                <a href="#" class="sf-acao">
+                    <i class="ri-google-play-line"></i>
+                    <span class="sf-acao-conteudo">
+                        <strong>Baixar APP</strong>
+                    </span>
+                    <i class="ri-arrow-right-line sf-acao-seta"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Corpo: ferramentas + aviso -->
+        <div class="sf-corpo">
+
+            <div class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Ferramentas</small>
+                    <h3>Outras Ferramentas</h3>
+                </div>
+
+                <nav class="sf-ferramentas">
+                    <a href="../dosagem/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-capsule-line"></i></span>
+                        <span class="sf-ferramenta-nome">Cálculo de Dosagem</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../formula_internacional/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-global-line"></i></span>
+                        <span class="sf-ferramenta-nome">Fórmula Internacional</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../sinais_vitais/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-heart-pulse-line"></i></span>
+                        <span class="sf-ferramenta-nome">Sinais Vitais</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                    <a href="../gotejamento/index.html" class="sf-ferramenta">
+                        <span class="sf-ferramenta-icone"><i class="ri-water-flash-line"></i></span>
+                        <span class="sf-ferramenta-nome">Gotejamento</span>
+                        <i class="ri-arrow-right-line sf-ferramenta-seta"></i>
+                    </a>
+                </nav>
+
+                <a href="../index.html#ferramentas" class="sf-ver-todas">
+                    <span>Ver todas as ferramentas</span>
+                    <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
+
+            <aside class="sf-coluna">
+                <div class="sf-seccao">
+                    <small>Rigor Científico &amp; Confiabilidade</small>
+                    <h3>Aviso Importante</h3>
+                </div>
+
+                <div class="sf-aviso">
+                    <i class="ri-alert-line"></i>
+                    <p>Esta ferramenta é um auxiliar de cálculo. A conferência com os protocolos institucionais e bula,
+                        bem como a opinião médica, são indispensáveis.</p>
+                </div>
+            </aside>
+        </div>
+
+        <div class="sf-separador"></div>
+
+        <!-- Base: copyright -->
+        <div class="sf-base">
+            <span class="sf-base-info">
+                <strong>Mpindi TecMed</strong>
+                <em>·</em>
+                <span>Plataforma MatClínica</span>
+            </span>
+            <span class="sf-copyright">© 2026 Mpindi TecMed</span>
+        </div>
+
+    </footer>
+    <script src="../assets/js/persistencia.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 800 });</script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1128,14 +1128,18 @@ html[data-theme="light"] .mc-open-item:not(.active):hover .mc-open-label {
     /* Espaçador: controla a distância de scroll durante a qual a secção
        "sobre" desliza por cima da hero. A hero em si não se move. */
     height: 100vh;
+    pointer-events: none !important;
+    pointer-events: none;
 }
 
 .hero-section {
+    pointer-events: auto;
+    pointer-events: auto !important;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: -1;
+    z-index: 0;
     padding-top: 140px;
     min-height: 100vh;
     display: flex;
@@ -3066,6 +3070,8 @@ html[data-theme="light"] .mc-open-item:not(.active):hover .mc-open-label {
     border-top: 1px solid #e0e6e3;
     padding: 40px 20px 20px;
     color: #4a5a51;
+    position: relative;
+    z-index: 100;
 }
 
 [data-theme="dark"] .footer-static {

@@ -2,6 +2,10 @@
    MatClínica - Pop-up do botão "Baixar APP"
    Colocar em: assets/baixar-app.js
    Funciona em todas as páginas que incluírem este script.
+
+   
+   se este arquivo tiver o nome persistência, é temporário, sua função 
+   é ativar o pop up de baixar app.
    ========================================================= */
 (function () {
   "use strict";
